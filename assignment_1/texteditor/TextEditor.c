@@ -64,11 +64,29 @@ void undo(TextEditor *editor) {
     last_action = pop(&editor->action_history);
 
     if (last_action.type == INSERT) {
-        deleteCharacter(editor, last_action.position);
+      char deleted_char;
+      deleted_char = editor->text[last_action.position];
+
+      for (int i = pos; i < editor->length - 1; i++) {
+          editor->text[i] = editor->text[i + 1];
+      }
+
+      editor->length -= 1;
     }
-    else if (last_action.type == DELETE)
-    {
-        insertCharacter(editor, last_action.position, last_action.character);
+    else if (last_action.type == DELETE) {
+      if (editor->length >= editor->capacity) {
+        int new_capacity;
+        new_capacity = 2 * editor->capacity;
+        editor->capacity = new_capacity;
+        editor->text = realloc(editor->text, new_capacity * sizeof(*editor->text));
+        assert(editor->text != NULL);
+      }
+
+      for (int i = editor->length; i > last_action.position;i--) {
+          editor->text[i] = editor->text[i - 1];
+      }
+      editor->text[last_action.position] = last_action.character;
+      editor->length += 1;
     }
 }
 
