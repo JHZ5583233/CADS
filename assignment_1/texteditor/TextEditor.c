@@ -17,11 +17,21 @@ TextEditor* createTextEditor(void) {
 }
 
 void insertCharacter(TextEditor *editor, int pos, char character) {
-  // Implement the insert operation
+    // Implement the insert operation
+    for (int i = pos; i < editor->capacity;i++) {
+        editor->text[i + 1] = editor->text[i];
+    }
+    editor->text[pos] = character;
 }
 
 void deleteCharacter(TextEditor *editor, int pos) {
   // Implement the delete operation
+
+    for (int i =pos;i<editor->length;i++) {
+        editor->text[i] = editor->text[i+1];
+    }
+
+    editor->length -= 1;
 }
 
 void undo(TextEditor *editor) {
@@ -43,7 +53,9 @@ void printText(TextEditor *editor) {
       return;
   }
 
-  printf("%s\n", editor->text);
+  for (int i = 0; i < editor->length; i++) {
+      printf("%c", editor->text[i]);
+  }
 }
 
 int main(void) {
