@@ -67,7 +67,7 @@ void undo(TextEditor *editor) {
       char deleted_char;
       deleted_char = editor->text[last_action.position];
 
-      for (int i = pos; i < editor->length - 1; i++) {
+      for (int i = last_action.position; i < editor->length - 1; i++) {
           editor->text[i] = editor->text[i + 1];
       }
 
