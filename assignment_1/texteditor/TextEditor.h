@@ -6,6 +6,7 @@
 typedef struct TextEditor {
   char *text;
   Stack action_history;
+  Stack undo_history;
   int length;
   int capacity;
 } TextEditor;

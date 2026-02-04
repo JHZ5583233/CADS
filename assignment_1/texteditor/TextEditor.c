@@ -16,6 +16,7 @@ TextEditor* createTextEditor(void) {
   editor->length = 0;
   editor->capacity = TEXT_EDITOR_INITIAL_CAPACITY;
   editor->action_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
+  editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
 
   return editor;
 }
@@ -37,6 +38,7 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
 
   EditOperation current_action = {INSERT, character, pos};
   push(current_action, &editor->action_history);
+  editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
 }
 
 void deleteCharacter(TextEditor *editor, int pos) {
@@ -50,6 +52,7 @@ void deleteCharacter(TextEditor *editor, int pos) {
 
   EditOperation current_action = {DELETE, deleted_char, pos};
   push(current_action, &editor->action_history);
+  editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
 }
 
 void undo(TextEditor *editor) {
@@ -60,8 +63,6 @@ void undo(TextEditor *editor) {
   EditOperation last_action = pop(&editor->action_history);
 
   if (last_action.type == INSERT) {
-    char deleted_char = editor->text[last_action.position];
-
     for (int i = last_action.position; i < editor->length - 1; i++) {
       editor->text[i] = editor->text[i + 1];
     }
@@ -82,9 +83,23 @@ void undo(TextEditor *editor) {
     editor->text[last_action.position] = last_action.character;
     editor->length += 1;
   }
+
+  push(last_action, &editor->undo_history);
 }
 
 void redo(TextEditor *editor) {
+  if (isEmptyStack(editor->undo_history)) {
+    return;
+  }
+
+  EditOperation last_action = pop(&editor->undo_history);
+
+  if (last_action.type == INSERT) {
+    insertCharacter(editor, last_action.position, last_action.character);
+  }
+  else if (last_action.type == DELETE) {
+    deleteCharacter(editor, last_action.position);
+  }
 }
 
 void destroyTextEditor(TextEditor *editor) {
