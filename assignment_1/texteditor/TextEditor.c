@@ -20,7 +20,7 @@ TextEditor* createTextEditor(void) {
 
 void insertCharacter(TextEditor *editor, int pos, char character) {
     // Implement the insert operation
-    for (int i = pos; i < editor->capacity;i++) {
+    for (int i = pos; i < editor->length;i++) {
         editor->text[i + 1] = editor->text[i];
     }
     editor->text[pos] = character;
@@ -35,8 +35,8 @@ void deleteCharacter(TextEditor *editor, int pos) {
     char deleted_char;
     deleted_char = editor->text[pos];
 
-    for (int i =pos;i<editor->length;i++) {
-        editor->text[i] = editor->text[i+1];
+    for (int i = pos; i < editor->length - 1; i++) {
+        editor->text[i] = editor->text[i + 1];
     }
 
     editor->length -= 1;
@@ -47,6 +47,10 @@ void deleteCharacter(TextEditor *editor, int pos) {
 
 void undo(TextEditor *editor) {
   // Implement the undo operation
+    if (isEmptyStack(editor->action_history)) {
+      return;
+    }
+
     EditOperation last_action;
     last_action = pop(&editor->action_history);
 
