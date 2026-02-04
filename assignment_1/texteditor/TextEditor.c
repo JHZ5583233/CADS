@@ -28,8 +28,8 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
       assert(editor->text != NULL);
     }
 
-    for (int i = pos; i < editor->length;i++) {
-        editor->text[i + 1] = editor->text[i];
+    for (int i = editor->length; i > pos;i--) {
+        editor->text[i] = editor->text[i - 1];
     }
     editor->text[pos] = character;
     editor->length += 1;
