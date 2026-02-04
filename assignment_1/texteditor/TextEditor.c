@@ -38,6 +38,8 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
 
   EditOperation current_action = {INSERT, character, pos};
   push(current_action, &editor->action_history);
+
+  freeStack(editor->undo_history);
   editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
 }
 
@@ -52,6 +54,8 @@ void deleteCharacter(TextEditor *editor, int pos) {
 
   EditOperation current_action = {DELETE, deleted_char, pos};
   push(current_action, &editor->action_history);
+
+  freeStack(editor->undo_history);
   editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
 }
 
@@ -105,6 +109,7 @@ void redo(TextEditor *editor) {
 void destroyTextEditor(TextEditor *editor) {
   free(editor->text);
   freeStack(editor->action_history);
+  freeStack(editor->undo_history);
   free(editor);
 }
 

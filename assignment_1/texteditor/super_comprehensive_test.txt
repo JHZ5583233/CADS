@@ -5,6 +5,8 @@ i 3 D
 i 4 E
 u
 u
+r
+r
 i 2 X
 i 3 Y
 i 4 Z
@@ -12,7 +14,22 @@ d 0
 d 2
 u
 u
+r
 u
+d 0
+d 0
+d 0
+d 0
+d 0
+u
+u
+u
+u
+u
+r
+r
+r
+r
 i 0 H
 i 1 e
 i 2 l
@@ -24,31 +41,26 @@ d 2
 u
 u
 u
-u
-u
-d 0
-d 0
-d 0
-d 0
-d 0
-u
-u
-u
-u
-u
+r
+r
 i 0 T
 i 1 e
 i 2 s
 i 3 t
-i 4 123
 d 1
 d 1
 d 1
 u
+r
+r
+r
 i 0 1
 i 1 2
 i 2 3
 u
 u
+r
 u
+r
+r
 q
