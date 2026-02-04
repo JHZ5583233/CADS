@@ -1,4 +1,5 @@
 #include "TextEditor.h"
+#include "LibStack.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -43,8 +44,10 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
   EditOperation current_action = {INSERT, character, pos};
   push(current_action, &editor->action_history);
 
-  freeStack(editor->undo_history);
-  editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
+  if (!isEmptyStack(editor->undo_history)) {
+    freeStack(editor->undo_history);
+    editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
+  }
 }
 
 void simpledeleteCharacter(TextEditor *editor, int pos) {
@@ -63,8 +66,10 @@ void deleteCharacter(TextEditor *editor, int pos) {
   EditOperation current_action = {DELETE, deleted_char, pos};
   push(current_action, &editor->action_history);
 
-  freeStack(editor->undo_history);
-  editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
+  if (!isEmptyStack(editor->undo_history)) {
+    freeStack(editor->undo_history);
+    editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
+  }
 }
 
 void undo(TextEditor *editor) {
