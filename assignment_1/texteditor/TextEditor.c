@@ -26,6 +26,13 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
     editor->text[pos] = character;
     editor->length += 1;
 
+    if (editor->length == editor->capacity) {
+      int new_capacity;
+      new_capacity = 2 * editor->capacity;
+      editor->capacity = new_capacity;
+      editor->text = realloc(editor->text, new_capacity * sizeof(*editor->text));
+    }
+
     EditOperation current_action = {INSERT, character, pos};
     push(current_action, &editor->action_history);
 }
