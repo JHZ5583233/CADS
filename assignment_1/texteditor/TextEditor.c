@@ -21,7 +21,7 @@ TextEditor* createTextEditor(void) {
   return editor;
 }
 
-void insertCharacter(TextEditor *editor, int pos, char character) {
+void simpleinsertCharacter(TextEditor *editor, int pos, char character) {
   if (editor->length >= editor->capacity) {
     int new_capacity = 2 * editor->capacity;
     editor->capacity = new_capacity;
@@ -35,6 +35,10 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
 
   editor->text[pos] = character;
   editor->length += 1;
+}
+
+void insertCharacter(TextEditor *editor, int pos, char character) {
+  simpleinsertCharacter(editor, pos, character);
 
   EditOperation current_action = {INSERT, character, pos};
   push(current_action, &editor->action_history);
@@ -43,14 +47,18 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
   editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
 }
 
-void deleteCharacter(TextEditor *editor, int pos) {
-  char deleted_char = editor->text[pos];
-
+void simpledeleteCharacter(TextEditor *editor, int pos) {
   for (int i = pos; i < editor->length - 1; i++) {
     editor->text[i] = editor->text[i + 1];
   }
 
   editor->length -= 1;
+}
+
+void deleteCharacter(TextEditor *editor, int pos) {
+  char deleted_char = editor->text[pos];
+
+  simpledeleteCharacter(editor, pos);
 
   EditOperation current_action = {DELETE, deleted_char, pos};
   push(current_action, &editor->action_history);
@@ -67,25 +75,10 @@ void undo(TextEditor *editor) {
   EditOperation last_action = pop(&editor->action_history);
 
   if (last_action.type == INSERT) {
-    for (int i = last_action.position; i < editor->length - 1; i++) {
-      editor->text[i] = editor->text[i + 1];
-    }
-
-    editor->length -= 1;
+    simpledeleteCharacter(editor, last_action.position);
   }
   else if (last_action.type == DELETE) {
-    if (editor->length >= editor->capacity) {
-      int new_capacity = 2 * editor->capacity;
-      editor->capacity = new_capacity;
-      editor->text = realloc(editor->text, new_capacity * sizeof(*editor->text));
-      assert(editor->text != NULL);
-    }
-
-    for (int i = editor->length; i > last_action.position; i--) {
-      editor->text[i] = editor->text[i - 1];
-    }
-    editor->text[last_action.position] = last_action.character;
-    editor->length += 1;
+    simpleinsertCharacter(editor, last_action.position, last_action.character);
   }
 
   push(last_action, &editor->undo_history);
@@ -97,12 +90,21 @@ void redo(TextEditor *editor) {
   }
 
   EditOperation last_action = pop(&editor->undo_history);
+  int pos = last_action.position;
+  char character = last_action.character;
 
   if (last_action.type == INSERT) {
-    insertCharacter(editor, last_action.position, last_action.character);
+    simpleinsertCharacter(editor, last_action.position, last_action.character);
+
+    EditOperation current_action = {INSERT, character, pos};
+    push(current_action, &editor->action_history);
   }
   else if (last_action.type == DELETE) {
-    deleteCharacter(editor, last_action.position);
+    char deleted_char = editor->text[last_action.position];
+    simpledeleteCharacter(editor, last_action.position);
+
+    EditOperation current_action = {DELETE, deleted_char, pos};
+    push(current_action, &editor->action_history);
   }
 }
 
