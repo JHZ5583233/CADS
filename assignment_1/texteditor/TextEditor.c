@@ -22,6 +22,7 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
         editor->text[i + 1] = editor->text[i];
     }
     editor->text[pos] = character;
+    editor->length += 1;
 }
 
 void deleteCharacter(TextEditor *editor, int pos) {
@@ -44,6 +45,7 @@ void redo(TextEditor *editor) {
 
 void destroyTextEditor(TextEditor *editor) {
   // Don't forget to free!
+    free(editor->text);
 }
 
 void printText(TextEditor *editor) {
