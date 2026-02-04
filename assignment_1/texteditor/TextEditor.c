@@ -38,6 +38,12 @@ void destroyTextEditor(TextEditor *editor) {
 
 void printText(TextEditor *editor) {
   // Print the text
+  if (editor->length == 0) {
+      printf("EMPTY");
+      return;
+  }
+
+  printf("%s\n", editor->text);
 }
 
 int main(void) {
