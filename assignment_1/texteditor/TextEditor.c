@@ -95,20 +95,17 @@ void redo(TextEditor *editor) {
   }
 
   EditOperation last_action = pop(&editor->undo_history);
-  int pos = last_action.position;
-  char character = last_action.character;
 
   if (last_action.type == INSERT) {
     simpleinsertCharacter(editor, last_action.position, last_action.character);
 
-    EditOperation current_action = {INSERT, character, pos};
+    EditOperation current_action = {INSERT, last_action.character, last_action.position};
     push(current_action, &editor->action_history);
   }
   else if (last_action.type == DELETE) {
-    char deleted_char = editor->text[last_action.position];
+    EditOperation current_action = {DELETE, editor->text[last_action.position], last_action.position};
     simpledeleteCharacter(editor, last_action.position);
 
-    EditOperation current_action = {DELETE, deleted_char, pos};
     push(current_action, &editor->action_history);
   }
 }
