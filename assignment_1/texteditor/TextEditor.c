@@ -22,6 +22,12 @@ TextEditor* createTextEditor(void) {
   return editor;
 }
 
+void emptyUndoHistory(TextEditor *editor) {
+    while (!isEmptyStack(editor->undo_history)) {
+        pop(&editor->undo_history);
+    }
+}
+
 void simpleinsertCharacter(TextEditor *editor, int pos, char character) {
   if (editor->length >= editor->capacity) {
     int new_capacity = 2 * editor->capacity;
@@ -44,10 +50,7 @@ void insertCharacter(TextEditor *editor, int pos, char character) {
   EditOperation current_action = {INSERT, character, pos};
   push(current_action, &editor->action_history);
 
-  if (!isEmptyStack(editor->undo_history)) {
-    freeStack(editor->undo_history);
-    editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
-  }
+  emptyUndoHistory(editor);
 }
 
 void simpledeleteCharacter(TextEditor *editor, int pos) {
@@ -66,10 +69,7 @@ void deleteCharacter(TextEditor *editor, int pos) {
   EditOperation current_action = {DELETE, deleted_char, pos};
   push(current_action, &editor->action_history);
 
-  if (!isEmptyStack(editor->undo_history)) {
-    freeStack(editor->undo_history);
-    editor->undo_history = newStack(TEXT_EDITOR_INITIAL_CAPACITY);
-  }
+  emptyUndoHistory(editor);
 }
 
 void undo(TextEditor *editor) {
