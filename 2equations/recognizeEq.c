@@ -109,23 +109,23 @@ void recognizeEquations() {
     if (acceptEquation(&tl1) && tl1 == NULL) {
       printf("this is an equation");
 
-      switch (amountVariable(&tl1))
-      {
+      switch (amountVariable(&tl)) {
       case 0:
         break;
-      case 1:
-         printf("in 1 variable");
-         int n = degree(&tl1);
-         printf("  of degree %n", n);
-         break;
+      case 1: {
+        printf(" in 1 variable");
+        int n = degree(&tl);
+        printf(" of degree %d", n);
+        break;
+      }
       case 2:
-         printf(", but not in 1 variable");
-         break;
+        printf(", but not in 1 variable");
+        break;
       default:
         break;
       }
 
-      printf("\n")
+      printf("\n");
     } else {
       printf("this is not an equation\n");
     }
