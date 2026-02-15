@@ -88,11 +88,58 @@ int acceptEquation(List *lp) {
 }
 
 int amountVariable(List *lp) {
+  List temp = *lp;
+  int amount = 0;
+  char v;
 
+  while (temp != NULL) {
+    if (temp->tt == Identifier) {
+        char *varName = temp->t.identifier;
+
+        if (amount == 0) {
+            amount += 1;
+            v = &varName;
+        } else {
+            if (v == &varName) {
+                continue;
+            } else {
+                amount = 2;
+                break;
+            }
+        }
+
+    }
+    temp = temp->next;
+  }
+
+  return amount;
 }
 
 int degree(List *lp) {
+  int maxDegree = 0;
+  List temp = *lp;
 
+  while (temp != NULL) {
+    if (temp->tt == Identifier) {
+      if (temp->next != NULL && temp->next->tt == Symbol && temp->next->t.symbol == '^') {
+        if (temp->next->next != NULL && temp->next->next->tt == Number) {
+          int termDegree = temp->next->next->t.number;
+          if (termDegree > maxDegree) {
+            maxDegree = termDegree;
+          }
+          temp = temp->next->next->next;
+          continue;
+        }
+      } else {
+        if (1 > maxDegree) {
+          maxDegree = 1;
+        }
+      }
+    }
+    temp = temp->next;
+  }
+  
+  return maxDegree;
 }
 
 
