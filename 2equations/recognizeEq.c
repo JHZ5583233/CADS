@@ -87,6 +87,15 @@ int acceptEquation(List *lp) {
   return 1;
 }
 
+int amountVariable(List *lp) {
+
+}
+
+int degree(List *lp) {
+
+}
+
+
 void recognizeEquations() {
   char *ar;
   List tl, tl1;
@@ -98,7 +107,25 @@ void recognizeEquations() {
     printList(tl);
     tl1 = tl;
     if (acceptEquation(&tl1) && tl1 == NULL) {
-      printf("this is an equation\n");
+      printf("this is an equation");
+
+      switch (amountVariable(&tl1))
+      {
+      case 0:
+        break;
+      case 1:
+         printf("in 1 variable");
+         int n = degree(&tl1);
+         printf("  of degree %n", n);
+         break;
+      case 2:
+         printf(", but not in 1 variable");
+         break;
+      default:
+        break;
+      }
+
+      printf("\n")
     } else {
       printf("this is not an equation\n");
     }
