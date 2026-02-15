@@ -1,5 +1,5 @@
-#include "recognizeExp.h"
+#include "recognizeEq.h"
 
 int main(void) {
-  recognizeExpressions();
+  recognizeEquations();
 }

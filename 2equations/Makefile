@@ -1,11 +1,11 @@
 CC = gcc
 
-CFLAGS = -O2 -std=c99 -pedantic -Wall -o -lm
+CFLAGS = -O2 -std=c99 -pedantic -Wall -lm
 
 scan: mainScan.c scanner.c
 	$(CC) $(CFLAGS) $^ -o $@
 
-recog: mainRecog.c scanner.c recognizeExp.c
+recog: mainRecog.c scanner.c recognizeEq.c
 	$(CC) $(CFLAGS) $^ -o $@
 
 eval: scanner.c recognizeExp.c evalExp.c mainEvalExp.c
