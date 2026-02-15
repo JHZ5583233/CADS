@@ -147,7 +147,9 @@ void recognizeEquations() {
   char *ar;
   List tl, tl1;
   printf("give an equation: ");
+  fflush(stdout);
   ar = readInput();
+
   while (ar[0] != '!') {
     tl = tokenList(ar);
     tl1 = tl;
@@ -174,9 +176,11 @@ void recognizeEquations() {
     } else {
       printf("this is not an equation\n");
     }
+
     free(ar);
     freeTokenList(tl);
     printf("\ngive an equation: ");
+    fflush(stdout);
     ar = readInput();
   }
   free(ar);

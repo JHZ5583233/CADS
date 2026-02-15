@@ -104,16 +104,19 @@ void recognizeExpressions() {
   List tl, tl1;
   printf("give an expression: ");
   ar = readInput();
+
   while (ar[0] != '!') {
     tl = tokenList(ar);
     printf("the token list is ");
     printList(tl);
     tl1 = tl;
+
     if (acceptExpression(&tl1) && tl1 == NULL) {
       printf("this is an expression\n");
     } else {
       printf("this is not an expression\n");
     }
+
     free(ar);
     freeTokenList(tl);
     printf("\ngive an expression: ");
