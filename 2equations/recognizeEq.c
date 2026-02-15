@@ -32,7 +32,7 @@ int acceptCharacter(List *lp, char c) {
 int acceptTerm(List *lp) {
   List temp = *lp;
   int hasNumber = acceptNumber(&temp);
-  
+
   if (acceptIdentifier(&temp)) {
     if (acceptCharacter(&temp, '^')) {
       if (!acceptNumber(&temp)) {
@@ -116,7 +116,7 @@ int amountVariable(List *lp) {
 }
 
 int degree(List *lp) {
-  int maxDegree = 0;
+  int maxDegree = 1;
   List temp = *lp;
 
   while (temp != NULL) {
@@ -129,10 +129,6 @@ int degree(List *lp) {
           }
           temp = temp->next->next->next;
           continue;
-        }
-      } else {
-        if (1 > maxDegree) {
-          maxDegree = 1;
         }
       }
     }
